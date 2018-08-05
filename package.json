@@ -4,10 +4,13 @@
   "private": true,
   "dependencies": {
     "@types/ramda": "^0.25.36",
+    "@types/react-redux": "^6.0.6",
     "ramda": "^0.25.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-redux": "^5.0.7",
     "react-scripts-ts": "2.16.0",
+    "redux": "^4.0.0",
     "semantic-ui-react": "^0.82.1"
   },
   "scripts": {
