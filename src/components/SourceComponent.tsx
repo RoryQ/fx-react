@@ -25,7 +25,7 @@ interface SourceComponentState {
 function CurrencyToDropdownProp(c: Currency): DropdownItemProps {
     return {
         value: c.code,
-        text: c.name,
+        text: `${c.name} - ${c.code}`,
         flag: c.flag
     };
 }
@@ -60,8 +60,8 @@ class SourceComponent extends React.Component<SourceComponentModel, SourceCompon
                 <Segment>
                     <Header as='h3'>
                         <Input labelPosition='right' type='number' placeholder='Enter Amount' onChange={this.handleAmountChange}>
-                            <Label icon={<Icon name='money bill alternate'/>} >{this.state.selectedCurrencySymbol}</Label>
-                            <input value={this.props.amount}/>
+                            <Label icon={!this.state.selectedCurrencySymbol ? <Icon name='money bill alternate'/> : null} >{this.state.selectedCurrencySymbol}</Label>
+                            <input value={this.props.amount ? this.props.amount.toFixed(2): 0}/>
                             <Label >
                                 <Responsive minWidth={Responsive.onlyTablet.minWidth}>
                                     <Dropdown placeholder='Select Currency' fluid search selection options={currencyOptions} onChange={this.handleSelectCurrency}/>
