@@ -86,7 +86,6 @@ export function converter(state: RootState = initialRootState, action: RootActio
                 }
             }
         case SELECT_CURRENCY_FROM:
-            console.log(SELECT_CURRENCY_FROM, state);
             return {
                 ...state,
                 calc: {
@@ -95,7 +94,6 @@ export function converter(state: RootState = initialRootState, action: RootActio
                 }
             }
         case SELECT_CURRENCY_TO:
-            console.log(SELECT_CURRENCY_TO, state);
             return {
                 ...state,
                 calc: {

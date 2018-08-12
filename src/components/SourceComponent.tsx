@@ -59,12 +59,12 @@ class SourceComponent extends React.Component<SourceComponentModel, SourceCompon
             <Segment.Group>
                 <Segment>
                     <Header as='h3'>
-                        <Input labelPosition='right' type='number' placeholder='Enter Amount' onChange={this.handleAmountChange}>
-                            <Label icon={!this.state.selectedCurrencySymbol ? <Icon name='money bill alternate'/> : null} >{this.state.selectedCurrencySymbol}</Label>
+                        <Input size='huge' fluid labelPosition='right' type='number' placeholder='Enter Amount' onChange={this.handleAmountChange}>
+                            <Label fluid icon={!this.state.selectedCurrencySymbol ? <Icon name='money bill alternate'/> : null} >{this.state.selectedCurrencySymbol}</Label>
                             <input value={this.props.amount ? this.props.amount.toFixed(2): 0}/>
                             <Label >
                                 <Responsive minWidth={Responsive.onlyTablet.minWidth}>
-                                    <Dropdown value={this.props.selectedCurrency} placeholder='Select Currency' fluid search selection options={currencyOptions} onChange={this.handleSelectCurrency}/>
+                                    <Dropdown value={this.props.selectedCurrency} placeholder='Select Currency' search selection options={currencyOptions} onChange={this.handleSelectCurrency}/>
                                 </Responsive>
                             </Label>
                         </Input>
@@ -74,7 +74,7 @@ class SourceComponent extends React.Component<SourceComponentModel, SourceCompon
                     <Segment>
                         <Header as='h3'>
                         <Header.Content>
-                            <Dropdown value={this.props.selectedCurrency}placeholder='Select Currency' fluid search selection options={currencyOptions}  onChange={this.handleSelectCurrency}/>
+                            <Dropdown value={this.props.selectedCurrency}placeholder='Select Currency' search selection options={currencyOptions}  onChange={this.handleSelectCurrency}/>
                         </Header.Content>
                         </Header>
                     </Segment>
