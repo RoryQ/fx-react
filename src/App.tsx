@@ -58,7 +58,6 @@ class App extends React.Component<AppActions> {
         <header className="App-header">
           <h1 className="App-title">Daily Exchange Rates</h1>
         </header>
-
         <FxCalculator />
       </div>
     );
