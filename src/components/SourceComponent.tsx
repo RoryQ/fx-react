@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {Dropdown, DropdownItemProps, Segment, Header, Input, Label, Responsive, Icon, InputOnChangeData} from 'semantic-ui-react';
 import * as R from 'ramda';
-import { Currency, SourceDirection } from '../types';
+import { Currency } from '../types';
 
 
 export interface SourceComponentProps {
-    direction: SourceDirection;
-    currencies: Array<Currency>;
+    currencies: ReadonlyArray<Currency>;
     amount?: number;
+    selectedCurrency?: string;
 }
 
 export interface SourceComponentActions {
@@ -64,7 +64,7 @@ class SourceComponent extends React.Component<SourceComponentModel, SourceCompon
                             <input value={this.props.amount ? this.props.amount.toFixed(2): 0}/>
                             <Label >
                                 <Responsive minWidth={Responsive.onlyTablet.minWidth}>
-                                    <Dropdown placeholder='Select Currency' fluid search selection options={currencyOptions} onChange={this.handleSelectCurrency}/>
+                                    <Dropdown value={this.props.selectedCurrency} placeholder='Select Currency' fluid search selection options={currencyOptions} onChange={this.handleSelectCurrency}/>
                                 </Responsive>
                             </Label>
                         </Input>
@@ -74,7 +74,7 @@ class SourceComponent extends React.Component<SourceComponentModel, SourceCompon
                     <Segment>
                         <Header as='h3'>
                         <Header.Content>
-                            <Dropdown placeholder='Select Currency' fluid search selection options={currencyOptions}  onChange={this.handleSelectCurrency}/>
+                            <Dropdown value={this.props.selectedCurrency}placeholder='Select Currency' fluid search selection options={currencyOptions}  onChange={this.handleSelectCurrency}/>
                         </Header.Content>
                         </Header>
                     </Segment>

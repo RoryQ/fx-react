@@ -1,98 +1,77 @@
 import * as React from 'react';
 import { Currency } from '../types';
 import SourceComponent from '../components/SourceComponent';
-import { Dictionary } from 'ramda';
-
+import * as actions from '../actions';
+import { RootState } from '../types';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 
 export interface FxCalculatorContainerProps {
-    currencies: Array<Currency>;
-    rates: Dictionary<number>;
-    base: string;
-}
-
-export interface FxCalculatorContainerActions {
-}
-
-export type FxCalculatorModel = FxCalculatorContainerProps & FxCalculatorContainerActions;
-
-interface FxCalculatorState {
+    currencies: ReadonlyArray<Currency>;
     fromAmount?: number;
     fromCurrency?: Currency;
-
     toAmount?: number;
     toCurrency?: Currency;
 }
 
-class FxCalculatorContainer extends React.Component<FxCalculatorModel, FxCalculatorState> {
+export interface FxCalculatorContainerActions {
+    updateFrom: (amount: number) => void;
+    updateTo: (amount: number) => void;
+    selectCurrencyFrom: (currency: Currency) => void;
+    selectCurrencyTo: (currency: Currency) => void;
+}
+
+export type FxCalculatorModel = FxCalculatorContainerProps & FxCalculatorContainerActions;
+export function mapStateToProps(state: RootState): FxCalculatorContainerProps {
+
+    const getCurrencyByCode = (code?: string): Currency | undefined => {
+        if (code) return state.fx.currencyDict[code];
+        return undefined;
+    }
+
+    return {
+        currencies: state.fx.currencies,
+        fromAmount: state.calc.fromState.amount,
+        fromCurrency: getCurrencyByCode(state.calc.fromState.code),
+        toAmount: state.calc.toState.amount,
+        toCurrency: getCurrencyByCode(state.calc.toState.code)
+    }
+}
+
+export function mapDispatchToProps(dispatch: Dispatch<actions.RootAction>): FxCalculatorContainerActions{
+    return {
+        updateFrom: (amount) => dispatch(actions.updateAmountFrom(amount)),
+        updateTo: (amount) => dispatch(actions.updateAmountTo(amount)),
+        selectCurrencyFrom: (currency) => dispatch(actions.selectCurrencyFrom(currency.code)),
+        selectCurrencyTo: (currency) => dispatch(actions.selectCurrencyTo(currency.code))
+    };
+}
+
+class FxCalculatorContainer extends React.Component<FxCalculatorModel> {
     constructor(props: FxCalculatorModel){
         super(props);
-
-        this.state = {
-        }
-    }
-
-    currenciesSelected = ():boolean => !!this.state.fromCurrency && !!this.state.toCurrency;
-
-    applyFx(from:string, to:string, amount:number): number {
-        let rate = 1;
-        if (from === this.props.base)
-        {
-            rate = this.props.rates[to];
-        }
-        else if (to == this.props.base)
-        { 
-            rate = 1.0 / this.props.rates[from];
-        }
-        else
-        {
-            rate = (1.0 / this.props.rates[from]) * this.props.rates[to];
-        }
-
-        return rate * amount;
-    }
-
-    updateFrom = (amount: number) => {
-        this.setState({ fromAmount: amount});
-
-        if (this.currenciesSelected()){
-            let converted = this.applyFx(this.state.fromCurrency!.code, this.state.toCurrency!.code, amount);
-            this.setState({toAmount: converted});
-        }
-    }
-    selectCurrencyFrom = (currency: Currency) => {
-        this.setState({fromCurrency: currency});
-
-        if (this.currenciesSelected() && this.state.fromAmount){
-            let converted = this.applyFx(currency.code, this.state.toCurrency!.code, this.state.fromAmount);
-            this.setState({toAmount: converted});
-        }
-    }
-
-    updateTo = (amount: number) => {
-        this.setState({toAmount: amount});
-
-        if (this.currenciesSelected()){
-            let converted = this.applyFx(this.state.toCurrency!.code, this.state.fromCurrency!.code, amount);
-            this.setState({fromAmount: converted});
-        }
-    }
-    selectCurrencyTo = (currency: Currency) => {
-        this.setState({toCurrency: currency});
-
-        if (this.currenciesSelected() && this.state.toAmount){
-            let converted = this.applyFx(currency.code, this.state.fromCurrency!.code, this.state.toAmount );
-            this.setState({fromAmount: converted});
-        }
     }
 
     public render() {
         return (
             <div>
-                <SourceComponent direction='from' amount={this.state.fromAmount} currencies={this.props.currencies} onAmountUpdate={this.updateFrom} onSelectCurrency={this.selectCurrencyFrom} />
-                <SourceComponent direction='to' amount={this.state.toAmount} currencies={this.props.currencies} onAmountUpdate={this.updateTo} onSelectCurrency={this.selectCurrencyTo} />
+                <SourceComponent 
+                     amount={this.props.fromAmount} 
+                     currencies={this.props.currencies}
+                     onAmountUpdate={this.props.updateFrom} 
+                     onSelectCurrency={this.props.selectCurrencyFrom} 
+                     selectedCurrency={this.props.fromCurrency != null ? this.props.fromCurrency!.code : undefined} 
+                />
+                <SourceComponent 
+                    amount={this.props.toAmount} 
+                    currencies={this.props.currencies} 
+                    onAmountUpdate={this.props.updateTo} 
+                    onSelectCurrency={this.props.selectCurrencyTo} 
+                    selectedCurrency={this.props.toCurrency != null ? this.props.toCurrency!.code : undefined} 
+                />
             </div>
         )
     }
 }
 
-export default FxCalculatorContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(FxCalculatorContainer);

@@ -1,8 +1,14 @@
-export const SELECT_CURRENCY = 'SELECT_CURRENCY';
-export type SELECT_CURRENCY = typeof SELECT_CURRENCY;
+export const SELECT_CURRENCY_FROM = 'SELECT_CURRENCY_FROM';
+export type SELECT_CURRENCY_FROM = typeof SELECT_CURRENCY_FROM;
 
-export const UPDATE_FROM = 'UPDATE_FROM';
-export type UPDATE_FROM = typeof UPDATE_FROM;
+export const UPDATE_AMOUNT_FROM = 'UPDATE_AMOUNT_FROM';
+export type UPDATE_AMOUNT_FROM = typeof UPDATE_AMOUNT_FROM;
 
-export const UPDATE_TO = 'UPDATE_TO';
-export type UPDATE_TO = typeof UPDATE_TO;
+export const SELECT_CURRENCY_TO = 'SELECT_CURRENCY_TO';
+export type SELECT_CURRENCY_TO = typeof SELECT_CURRENCY_TO;
+
+export const UPDATE_AMOUNT_TO = 'UPDATE_AMOUNT_TO';
+export type UPDATE_AMOUNT_TO = typeof UPDATE_AMOUNT_TO;
+
+export const LOAD_FX_RATES = 'LOAD_FX_RATES';
+export type LOAD_FX_RATES = typeof LOAD_FX_RATES;
