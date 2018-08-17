@@ -10,14 +10,30 @@ import * as cc from 'currency-codes';
 import * as React from 'react';
 import axios from 'axios';
 import FxCalculator from './containers/FxCalculatorContainer';
+import { Segment } from 'semantic-ui-react';
+
+interface FooterProps {
+  date: string;
+}
+const Footer: React.SFC<FooterProps> = (props) => 
+	<Segment vertical >
+    <p className="footer-text">
+      Taken from the European Central Bank rates published on {props.date}
+    </p>
+  </Segment>
 
 export interface AppActions {
   LoadFxRates: (currencies: Array<Currency>, rates: Dictionary<number>) => void;
 }
 
-function dailyRatesXmlToRates(xmlString: string): [Dictionary<number>, Array<Currency>]{
+export interface AppState {
+  date: string;
+}
+
+function dailyRatesXmlToRates(xmlString: string): [Dictionary<number>, Array<Currency>, string]{
   const currencies: Currency[] = new Array<Currency>();
   const rates = { 'EUR': 1 };
+  let date = ""
   currencies.push({ 
     name: cc.code('EUR').currency,
     code: 'EUR',
@@ -27,7 +43,7 @@ function dailyRatesXmlToRates(xmlString: string): [Dictionary<number>, Array<Cur
 
   parseString(xmlString, function XmlToRates(err, result) {
     const xmlRates = result['gesmes:Envelope']['Cube'][0]['Cube'][0]['Cube'];
-    // date = result['gesmes:Envelope'].Cube[0].Cube[0]['$'].time;
+    date = result['gesmes:Envelope'].Cube[0].Cube[0]['$'].time;
 
     for (let rate of xmlRates) {
       let ccode = rate['$']['currency'];
@@ -40,25 +56,35 @@ function dailyRatesXmlToRates(xmlString: string): [Dictionary<number>, Array<Cur
       });
     }
   });
-  return [rates, currencies];
+  return [rates, currencies, date];
 }
-class App extends React.Component<AppActions> {
+class App extends React.Component<AppActions, AppState> {
+  constructor(props: AppActions) {
+    super(props);
+    this.state = {
+      date: ''
+    }
+  }
 
   componentDidMount() {
     axios.get('https://s3-ap-southeast-2.amazonaws.com/aws-ecb-rates-mirror/eurofxref-daily.xml')
       .then(x => {
-        let [rates, currencies] = dailyRatesXmlToRates(x.data);
+        let [rates, currencies, date] = dailyRatesXmlToRates(x.data);
         this.props.LoadFxRates(currencies, rates);
+        this.setState({date: date});
       })
   }
 
   public render() {
     return (
-      <div className="App">
+      <div className="App Site">
         <header className="App-header">
           <h1 className="App-title">Daily Exchange Rates</h1>
         </header>
-        <FxCalculator />
+        <div className="Site-content">
+          <FxCalculator />
+        </div>
+		    <Footer date={this.state.date}/>
       </div>
     );
   }

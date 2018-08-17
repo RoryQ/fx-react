@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Dropdown, DropdownItemProps, Segment, Header, Input, Label, Responsive, Icon, InputOnChangeData} from 'semantic-ui-react';
+import { Dropdown, DropdownItemProps, Segment, Header, Input, Label, Responsive, Icon, InputOnChangeData } from 'semantic-ui-react';
 import * as R from 'ramda';
 import { Currency } from '../types';
 
@@ -40,15 +40,15 @@ class SourceComponent extends React.Component<SourceComponentModel, SourceCompon
         }
     }
 
-    handleAmountChange( event: React.SyntheticEvent<HTMLInputElement>, data: InputOnChangeData) {
+    handleAmountChange(event: React.SyntheticEvent<HTMLInputElement>, data: InputOnChangeData) {
         this.props.onAmountUpdate(parseFloat(data.value));
     }
 
     handleSelectCurrency(event: React.SyntheticEvent<HTMLInputElement>, data: InputOnChangeData) {
         let currency = this.props.currencies.find(x => x.code == data.value);
-        if (currency){
-             this.props.onSelectCurrency(currency);
-             this.setState({selectedCurrencySymbol: currency.symbol});
+        if (currency) {
+            this.props.onSelectCurrency(currency);
+            this.setState({ selectedCurrencySymbol: currency.symbol });
         }
     }
 
@@ -60,11 +60,11 @@ class SourceComponent extends React.Component<SourceComponentModel, SourceCompon
                 <Segment>
                     <Header as='h3'>
                         <Input size='huge' fluid labelPosition='right' type='number' placeholder='Enter Amount' onChange={this.handleAmountChange}>
-                            <Label fluid icon={!this.state.selectedCurrencySymbol ? <Icon name='money bill alternate'/> : null} >{this.state.selectedCurrencySymbol}</Label>
-                            <input value={this.props.amount ? this.props.amount.toFixed(2): 0}/>
+                            <Label icon={!this.state.selectedCurrencySymbol ? <Icon name='money bill alternate' /> : null} >{this.state.selectedCurrencySymbol}</Label>
+                            <input value={this.props.amount ? this.props.amount.toFixed(2) : 0} />
                             <Label >
                                 <Responsive minWidth={Responsive.onlyTablet.minWidth}>
-                                    <Dropdown value={this.props.selectedCurrency} placeholder='Select Currency' search selection options={currencyOptions} onChange={this.handleSelectCurrency}/>
+                                    <Dropdown value={this.props.selectedCurrency} placeholder='Select Currency' search selection options={currencyOptions} onChange={this.handleSelectCurrency} />
                                 </Responsive>
                             </Label>
                         </Input>
@@ -73,9 +73,9 @@ class SourceComponent extends React.Component<SourceComponentModel, SourceCompon
                 <Responsive {...Responsive.onlyMobile}>
                     <Segment>
                         <Header as='h3'>
-                        <Header.Content>
-                            <Dropdown value={this.props.selectedCurrency}placeholder='Select Currency' search selection options={currencyOptions}  onChange={this.handleSelectCurrency}/>
-                        </Header.Content>
+                            <Header.Content>
+                                <Dropdown value={this.props.selectedCurrency} placeholder='Select Currency' search selection options={currencyOptions} onChange={this.handleSelectCurrency} />
+                            </Header.Content>
                         </Header>
                     </Segment>
                 </Responsive>

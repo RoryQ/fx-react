@@ -12,3 +12,19 @@
 .App-title {
   font-size: 1.5em;
 }
+
+
+.Site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.Site-content {
+  flex: 1;
+  background-color: rgb(255, 241, 225);
+}
+
+.footer-text {
+  font-size: xx-small;
+}
