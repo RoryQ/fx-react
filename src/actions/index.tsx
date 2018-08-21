@@ -21,14 +21,25 @@ export interface SelectCurrencyTo {
     code: string;
 }
 
+export interface RememberSelectionTo {
+    type: constants.REMEMBER_SELECTION_TO;
+    value: boolean;
+}
+
+export interface RememberSelectionFrom {
+    type: constants.REMEMBER_SELECTION_FROM;
+    value: boolean;
+}
+
 export interface LoadFxRatesAction {
     type: constants.LOAD_FX_RATES;
     rates: Dictionary<number>;
-    currencies: Array<Currency>
+    currencies: Array<Currency>;
+    date: string;
 }
 
 export type UpdateAmountActions = UpdateAmountFrom | UpdateAmountTo;
-export type SelectCurrencyActions = SelectCurrencyFrom | SelectCurrencyTo;
+export type SelectCurrencyActions = SelectCurrencyFrom | SelectCurrencyTo | RememberSelectionFrom | RememberSelectionTo;
 
 export type RootAction = UpdateAmountActions | SelectCurrencyActions | LoadFxRatesAction;
 
@@ -60,10 +71,25 @@ export function selectCurrencyTo(code: string): SelectCurrencyActions {
     };
 }
 
-export function LoadFxRates(currencies: Array<Currency>, rates: Dictionary<number>): LoadFxRatesAction {
+export function rememberSelectionTo(value: boolean): SelectCurrencyActions {
+    return {
+        type: constants.REMEMBER_SELECTION_TO,
+        value
+    };
+}
+
+export function rememberSelectionFrom(value: boolean): SelectCurrencyActions {
+    return {
+        type: constants.REMEMBER_SELECTION_FROM,
+        value
+    };
+}
+
+export function LoadFxRates(currencies: Array<Currency>, rates: Dictionary<number>, date: string): LoadFxRatesAction {
     return {
         type: constants.LOAD_FX_RATES,
         currencies,
-        rates
+        rates,
+        date
     }
 }

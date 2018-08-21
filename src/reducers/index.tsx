@@ -1,26 +1,27 @@
 import {RootAction, LoadFxRatesAction} from '../actions';
 import {FxState, Currency, RootState, SourceState} from '../types';
-import {SELECT_CURRENCY_FROM, UPDATE_AMOUNT_TO, LOAD_FX_RATES, UPDATE_AMOUNT_FROM, SELECT_CURRENCY_TO} from '../constants';
+import {SELECT_CURRENCY_FROM, UPDATE_AMOUNT_TO, LOAD_FX_RATES, UPDATE_AMOUNT_FROM, SELECT_CURRENCY_TO, REMEMBER_SELECTION_FROM, REMEMBER_SELECTION_TO} from '../constants';
 import * as R from 'ramda';
 
 export const initialRootState: RootState = {
     calc: {
         fromState: {
-            direction: 'from',
             amount: undefined,
-            code: undefined
+            code: undefined,
+            rememberSelection: false,
         },
         toState: {
-            direction: 'to',
             amount: undefined,
-            code: undefined
+            code: undefined,
+            rememberSelection: false
         },
     },
     fx: {
         currencies: [],
         base: 'EUR',
         currencyDict: {},
-        rates: {}
+        rates: {},
+        date: ''
     }
 }
 
@@ -101,6 +102,28 @@ export function converter(state: RootState = initialRootState, action: RootActio
                     toState: updateCurrency(c.toState, action.code)
                 }
             }
+        case REMEMBER_SELECTION_FROM:
+            return {
+                ...state,
+                calc: {
+                    ...state.calc,
+                    fromState: {
+                        ...state.calc.fromState,
+                        rememberSelection: action.value
+                    }
+                }
+            }
+        case REMEMBER_SELECTION_TO:
+            return {
+                ...state,
+                calc: {
+                    ...state.calc,
+                    toState: {
+                        ...state.calc.toState,
+                        rememberSelection: action.value
+                    }
+                }
+            }
         case LOAD_FX_RATES:
             return {
                 ...state,
@@ -120,5 +143,6 @@ export function load_rates(state: FxState = initialRootState.fx, action: LoadFxR
         currencyDict: R.indexBy(x => x.code, action.currencies),
         rates: action.rates,
         base: findBaseCurrency(action.currencies)!.code,
+        date: action.date
     }
 }

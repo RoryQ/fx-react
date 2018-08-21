@@ -1,9 +1,9 @@
 import { Dictionary } from "ramda";
 
 export interface SourceState {
-    direction: SourceDirection;
     amount?: number;
     code?: string;
+    rememberSelection: boolean;
 }
 
 export interface FxState {
@@ -11,6 +11,7 @@ export interface FxState {
     currencyDict: Dictionary<Currency>
     rates: Dictionary<number>;
     base: string;
+    date: string;
 }
 
 export interface Currency {

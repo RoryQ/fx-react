@@ -12,6 +12,8 @@ export interface FxCalculatorContainerProps {
     fromCurrency?: Currency;
     toAmount?: number;
     toCurrency?: Currency;
+    rememberSelectionFrom: boolean;
+    rememberSelectionTo: boolean;
 }
 
 export interface FxCalculatorContainerActions {
@@ -19,6 +21,8 @@ export interface FxCalculatorContainerActions {
     updateTo: (amount: number) => void;
     selectCurrencyFrom: (currency: Currency) => void;
     selectCurrencyTo: (currency: Currency) => void;
+    onRememberSelectionFrom: (value: boolean) => void;
+    onRememberSelectionTo: (value: boolean) => void;
 }
 
 export type FxCalculatorModel = FxCalculatorContainerProps & FxCalculatorContainerActions;
@@ -34,7 +38,9 @@ export function mapStateToProps(state: RootState): FxCalculatorContainerProps {
         fromAmount: state.calc.fromState.amount,
         fromCurrency: getCurrencyByCode(state.calc.fromState.code),
         toAmount: state.calc.toState.amount,
-        toCurrency: getCurrencyByCode(state.calc.toState.code)
+        toCurrency: getCurrencyByCode(state.calc.toState.code),
+        rememberSelectionFrom: state.calc.fromState.rememberSelection,
+        rememberSelectionTo: state.calc.toState.rememberSelection
     }
 }
 
@@ -43,7 +49,9 @@ export function mapDispatchToProps(dispatch: Dispatch<actions.RootAction>): FxCa
         updateFrom: (amount) => dispatch(actions.updateAmountFrom(amount)),
         updateTo: (amount) => dispatch(actions.updateAmountTo(amount)),
         selectCurrencyFrom: (currency) => dispatch(actions.selectCurrencyFrom(currency.code)),
-        selectCurrencyTo: (currency) => dispatch(actions.selectCurrencyTo(currency.code))
+        selectCurrencyTo: (currency) => dispatch(actions.selectCurrencyTo(currency.code)),
+        onRememberSelectionFrom: (value) => dispatch(actions.rememberSelectionFrom(value)),
+        onRememberSelectionTo: (value) => dispatch(actions.rememberSelectionTo(value))
     };
 }
 
@@ -61,6 +69,8 @@ class FxCalculatorContainer extends React.Component<FxCalculatorModel> {
                      onAmountUpdate={this.props.updateFrom} 
                      onSelectCurrency={this.props.selectCurrencyFrom} 
                      selectedCurrency={this.props.fromCurrency != null ? this.props.fromCurrency!.code : undefined} 
+                     rememberSelection={this.props.rememberSelectionFrom}
+                     onRememberSelection={this.props.onRememberSelectionFrom}
                 />
                 <SourceComponent 
                     amount={this.props.toAmount} 
@@ -68,6 +78,8 @@ class FxCalculatorContainer extends React.Component<FxCalculatorModel> {
                     onAmountUpdate={this.props.updateTo} 
                     onSelectCurrency={this.props.selectCurrencyTo} 
                     selectedCurrency={this.props.toCurrency != null ? this.props.toCurrency!.code : undefined} 
+                    rememberSelection={this.props.rememberSelectionTo}
+                    onRememberSelection={this.props.onRememberSelectionTo}
                 />
             </div>
         )
